@@ -54,10 +54,6 @@ module I18n
         [locale, SiteSetting.default_locale.to_sym, :en].uniq.compact
       end
 
-      def translate(locale, key, options = {})
-        (@overrides_enabled && overrides_for(locale)[key]) || super(locale, key, options)
-      end
-
       def exists?(locale, key)
         fallbacks(locale).each do |fallback|
           begin
@@ -68,6 +64,12 @@ module I18n
         end
 
         false
+      end
+
+      protected
+
+      def lookup(locale, key, scope = [], options = {})
+        (@overrides_enabled && overrides_for(locale)[key]) || super(locale, key, scope, options)
       end
 
     end
